@@ -5,7 +5,12 @@ var morgan = require('morgan')
 var path = require('path')
 var rfs = require('rotating-file-stream')
 var conf = require('dotenv').config();
-var port = process.env.API_PORT;
+var http = require('http');
+var https = require('https');
+var httpPort = process.env.API_HTTP_PORT;
+var httpsPort = process.env.API_HTTPS_PORT;
+var keyPath = '/etc/ssl/private/hrh-dwh.key';
+var certPath = '/etc/ssl/certs/hrh-dwh.crt';
 var app = express();
 var logDirectory = path.join(__dirname, 'logs')
 var router = require('./routes');
@@ -34,7 +39,14 @@ app.use(function(err, req, res, next) {
 		message: err.message
 	});
 });
-app.listen(port, function() {
-	console.log('Server started on port ' + port);
+http.createServer(app).listen(httpPort, function() {
+	console.log('HTTP server started on port ' + httpPort);
 });
-module.exports = app;
+if (process.env.APP_ENV === 'production' && fs.existsSync(keyPath) && fs.existsSync(certPath)) {
+	https.createServer({
+		key: fs.readFileSync(keyPath, 'utf8'),
+		cert: fs.readFileSync(certPath, 'utf8')
+	}, app).listen(httpsPort, function() {
+		console.log('HTTPS server started on port ' + httpsPort);
+	});
+}
