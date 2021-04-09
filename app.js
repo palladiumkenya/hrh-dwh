@@ -39,9 +39,11 @@ app.use(function(err, req, res, next) {
 		message: err.message
 	});
 });
+
 http.createServer(app).listen(httpPort, function() {
 	console.log('HTTP server started on port ' + httpPort);
 });
+
 if (process.env.APP_ENV === 'production' && fs.existsSync(keyPath) && fs.existsSync(certPath)) {
 	https.createServer({
 		key: fs.readFileSync(keyPath, 'utf8'),
@@ -50,3 +52,11 @@ if (process.env.APP_ENV === 'production' && fs.existsSync(keyPath) && fs.existsS
 		console.log('HTTPS server started on port ' + httpsPort);
 	});
 }
+
+var CronJob = require('cron').CronJob;
+var practitionerWorker = require('./workers/practitioner');
+
+var practitionersPullJob = new CronJob('0 3 * * *', function() { // everyday at 3am
+    practitionerWorker.processFetchPractitioners();
+}, null, true, 'Africa/Nairobi');
+practitionersPullJob.start();
