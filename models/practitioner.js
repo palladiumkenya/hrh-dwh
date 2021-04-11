@@ -39,8 +39,10 @@ practitioner.sync();
 
 module.exports = {
 	find: function (options) {
-		options.order = [['updatedAt', 'DESC']];
-		return practitioner.findAndCountAll(options);
+		if (!options.order) {
+			options.order = [['updatedAt', 'DESC']];
+		}
+		return practitioner.findAll(options);
 	},
 	create: function (body) {
 		var options = {
