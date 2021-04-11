@@ -5,10 +5,10 @@ module.exports = {
         var options = {};
         Promise.all([
             practitioner.find(options),
-        ]).then(function ([practitioner, county]) {
+        ]).then(function ([practitioner]) {
 			res.status(200).json({
 				"status": "success",
-				"practitioners": practitioner.count,
+				"practitioners": practitioner.length,
 			});
 		}).catch(function (error) {
 			res.status(500).json(error.message);
