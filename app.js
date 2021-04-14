@@ -55,8 +55,10 @@ if (process.env.APP_ENV === 'production' && fs.existsSync(keyPath) && fs.existsS
 
 var CronJob = require('cron').CronJob;
 var practitionerWorker = require('./workers/practitioner');
+var countyWorker = require('./workers/county');
 
 var practitionersPullJob = new CronJob('0 3 * * *', function() { // everyday at 3am
     practitionerWorker.processFetchPractitioners();
+	countyWorker.processFetchPopulationByCounty();
 }, null, true, 'Africa/Nairobi');
 practitionersPullJob.start();
