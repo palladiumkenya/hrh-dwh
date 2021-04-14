@@ -5,7 +5,7 @@ var moment = require('moment');
 
 var practitioner = sequelize.define('practitioners', {
 	id: { type: Sequelize.UUID, defaultValue: Sequelize.UUIDV4, primaryKey: true },
-	practitionerUniqueId: { type: Sequelize.STRING },
+	practitionerUniqueId: { type: Sequelize.STRING, allowNull: false },
 	nationalId: { type: Sequelize.STRING },
 	firstName: { type: Sequelize.STRING },
 	middleName: { type: Sequelize.STRING },

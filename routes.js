@@ -1,6 +1,7 @@
 var express =  require('express');
 var router = express.Router();
 var practitionerController = require('./controllers/practitioner');
+var countyController = require('./controllers/county');
 var statusController = require('./controllers/status');
 
 router.all('*', checkApiKey);
@@ -11,10 +12,14 @@ router.get('/practitioners', practitionerController.index);
 router.get('/practitioners/count-by-county-qualification', practitionerController.countyByCountyQualification);
 router.get('/practitioners/reprocess', practitionerController.reprocess);
 
+router.get('/counties', countyController.index);
+router.get('/counties/reprocess', countyController.reprocess);
+
 function checkApiKey(req, res, next) {
 	if(
 		req.path == '/' ||
 		req.path == '/practitioners/count-by-county-qualification' ||
+		req.path == '/counties' ||
 		req.query.api_key == process.env.API_KEY ||
 		req.body.api_key == process.env.API_KEY
 	) {
